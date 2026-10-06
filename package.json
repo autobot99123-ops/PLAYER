@@ -1,0 +1,13 @@
+{
+  "name": "glass-neo-player",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Local video player with glassmorphism + neo-brutalism UI, auto picture-in-picture popup on tab switch, and full keyboard control.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

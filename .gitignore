@@ -1,0 +1,15 @@
+# runtime noise
+server.log
+server.err
+
+# node
+node_modules/
+npm-debug.log*
+
+# the original artwork used to generate the icons
+public/icon-source.png
+
+# os
+Thumbs.db
+desktop.ini
+.DS_Store

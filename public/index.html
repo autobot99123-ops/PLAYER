@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#121110">
+<meta name="color-scheme" content="dark">
+<title>Player</title>
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="icon" href="/icon.png" type="image/png">
+<link rel="icon" href="/favicon.png" sizes="64x64" type="image/png">
+<link rel="apple-touch-icon" href="/icon-192.png">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-play" viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></symbol>
+  <symbol id="i-pause" viewBox="0 0 24 24"><path d="M7 5h3.5v14H7zm6.5 0H17v14h-3.5z"/></symbol>
+  <symbol id="i-stop" viewBox="0 0 24 24"><rect x="6.5" y="6.5" width="11" height="11" rx="1.5"/></symbol>
+  <symbol id="i-back10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5.5 6.5 9 11 12.5"/><path d="M6.8 9h6.4a5.3 5.3 0 1 1 0 10.6H9"/></symbol>
+  <symbol id="i-fwd10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M13 5.5 17.5 9 13 12.5"/><path d="M17.2 9h-6.4a5.3 5.3 0 1 0 0 10.6H15"/></symbol>
+  <symbol id="i-vol" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9.5h3.2L11.5 6v12L7.2 14.5H4z"/><path d="M15 9.6a3.2 3.2 0 0 1 0 4.8"/><path d="M17.6 7.2a6.6 6.6 0 0 1 0 9.6"/></symbol>
+  <symbol id="i-mute" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9.5h3.2L11.5 6v12L7.2 14.5H4z"/><path d="M15.5 10 20 14.5M20 10l-4.5 4.5"/></symbol>
+  <symbol id="i-prev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M17 6 11 12l6 6zM6 6v12"/></symbol>
+  <symbol id="i-next" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M7 6l6 6-6 6zM18 6v12"/></symbol>
+  <symbol id="i-pip" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2.5"/><rect x="12" y="11" width="7" height="5.5" rx="1.2" fill="currentColor" stroke="none"/></symbol>
+  <symbol id="i-full" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></symbol>
+  <symbol id="i-exitfull" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4v5H4M15 4v5h5M9 20v-5H4M15 20v-5h5"/></symbol>
+  <symbol id="i-folder" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M3 7.5A2 2 0 0 1 5 5.5h4l2 2.5h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></symbol>
+  <symbol id="i-refresh" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12a8 8 0 1 1-2.6-5.9"/><path d="M20 4.5V10h-5.5"/></symbol>
+  <symbol id="i-library" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h10"/></symbol>
+  <symbol id="i-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></symbol>
+  <symbol id="i-install" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v10"/><path d="M8 11l4 4 4-4"/><path d="M5 19h14"/></symbol>
+</svg>
+
+<header class="topbar">
+  <button id="libBtn" class="btn" title="Open library (B)">
+    <svg class="ico"><use href="#i-library"></use></svg><span>Library</span>
+    <span class="badge" id="videoCount">0</span>
+  </button>
+
+  <div class="brand">
+    <img class="brand-mark" src="/icon.png" alt="" width="22" height="22">
+  </div>
+
+  <div class="source" id="folderPath" title="Scanned folder">scanning…</div>
+
+  <div class="topbar-actions">
+    <span class="audio-state" id="audioState">Audio on</span>
+    <button id="installBtn" class="btn" hidden title="Install as a desktop app">
+      <svg class="ico"><use href="#i-install"></use></svg><span>Install</span>
+    </button>
+    <button id="openBtn" class="btn" title="Open video files from disk">
+      <svg class="ico"><use href="#i-folder"></use></svg><span>Open</span>
+    </button>
+    <button id="rescanBtn" class="btn icon" title="Re-scan the folder">
+      <svg class="ico"><use href="#i-refresh"></use></svg>
+    </button>
+  </div>
+
+  <input type="file" id="fileInput" accept="video/*,.mkv,.avi,.mov,.wmv,.flv,.ts" multiple hidden>
+</header>
+
+<main class="main">
+
+  <div class="stage" id="stage">
+    <video id="video" playsinline preload="metadata"></video>
+    <div class="pip-flag" id="pipBadge" hidden>Popup active</div>
+    <div class="dropzone" id="drop" hidden><span>Drop videos to play</span></div>
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    <button class="fs-exit" data-act="fsExit" title="Exit fullscreen (Esc or F)" aria-label="Exit fullscreen">
+      <svg class="ico"><use href="#i-exitfull"></use></svg>
+    </button>
+    <div class="stage-idle" id="stageIdle">
+      <button class="btn" data-act="library">Open library</button>
+    </div>
+  </div>
+
+  <section class="transport">
+    <div class="scrub">
+      <span class="time" id="curTime">0:00</span>
+      <input id="seek" class="range" type="range" min="0" max="1000" value="0" step="1" aria-label="Seek">
+      <span class="time" id="durTime">0:00</span>
+    </div>
+
+    <div class="controls">
+      <div class="group">
+        <button class="btn icon" data-act="back10" title="Back 10 seconds (← or J)"><svg class="ico"><use href="#i-back10"></use></svg></button>
+        <button class="btn icon primary" data-act="play" id="playBtn" title="Play / pause (Space)"><svg class="ico"><use href="#i-play"></use></svg></button>
+        <button class="btn icon" data-act="stop" title="Stop (S)"><svg class="ico"><use href="#i-stop"></use></svg></button>
+        <button class="btn icon" data-act="fwd10" title="Forward 10 seconds (→ or L)"><svg class="ico"><use href="#i-fwd10"></use></svg></button>
+      </div>
+
+      <div class="group">
+        <button class="btn icon" data-act="volDown" title="Boost down (↓)"><svg class="ico"><use href="#i-vol"></use></svg></button>
+        <span class="group-label">Boost</span>
+        <input id="boost" class="range boost-range" type="range" min="100" max="400" step="10" value="100" aria-label="Audio boost">
+        <span class="vol-readout" id="boostReadout">100%</span>
+        <button class="btn icon" data-act="volUp" title="Boost up (↑)"><svg class="ico"><use href="#i-vol"></use></svg></button>
+        <button class="btn icon" data-act="mute" id="muteBtn" title="Mute (M)"><svg class="ico"><use href="#i-vol"></use></svg></button>
+      </div>
+
+      <div class="spacer"></div>
+
+      <div class="group">
+        <button class="btn icon" data-act="prev" title="Previous video (P)"><svg class="ico"><use href="#i-prev"></use></svg></button>
+        <button class="btn icon" data-act="next" title="Next video (N)"><svg class="ico"><use href="#i-next"></use></svg></button>
+        <button class="btn" data-act="pip" id="pipBtn" title="Popup / picture-in-picture (O)">
+          <svg class="ico"><use href="#i-pip"></use></svg><span>Popup</span>
+        </button>
+        <button class="btn" data-act="full" id="fullBtn" title="Fullscreen (F) — or F11 for the whole window">
+          <svg class="ico"><use href="#i-full"></use></svg><span>Full</span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <details class="help">
+    <summary>Keys</summary>
+    <div class="keys">
+      <div><span class="k">Space</span><em>play / pause</em></div>
+      <div><span class="k">S</span><em>stop</em></div>
+      <div><span class="k">←</span><span class="k">→</span><em>seek 10s</em></div>
+      <div><span class="k">Shift</span><em>+ arrow = 1s</em></div>
+      <div><span class="k">↑</span><span class="k">↓</span><em>volume</em></div>
+      <div><span class="k">M</span><em>mute</em></div>
+      <div><span class="k">0</span>–<span class="k">9</span><em>jump to 0–90%</em></div>
+      <div><span class="k">O</span><em>popup</em></div>
+      <div><span class="k">F</span><em>fullscreen video</em></div>
+      <div><span class="k">N</span><span class="k">P</span><em>next / previous</em></div>
+      <div><span class="k">B</span><em>library</em></div>
+      <div><span class="k">Esc</span><em>close library</em></div>
+      <div><span class="k">F11</span><em>fullscreen</em></div>
+    </div>
+  </details>
+</main>
+
+<div class="backdrop" id="libBackdrop" hidden></div>
+
+<aside class="library-panel" id="libPanel" aria-label="Video library" aria-hidden="true">
+  <div class="panel-head">
+    <h2>Library</h2>
+    <button class="btn icon" id="libClose" title="Close library (Esc)"><svg class="ico"><use href="#i-close"></use></svg></button>
+  </div>
+
+  <div class="panel-search">
+    <input id="search" class="field" type="search" placeholder="Search" autocomplete="off" spellcheck="false">
+  </div>
+
+  <label class="switch">
+    <input type="checkbox" id="autoPip">
+    <span class="switch-track"><span class="switch-dot"></span></span>
+    <span class="switch-label">Auto popup on tab switch</span>
+  </label>
+
+  <ul id="list" class="library" role="listbox"></ul>
+
+  <p class="empty" id="empty">
+    No videos found.<br>Drop files anywhere, use <b>Open</b>, or point <code>VIDEOS_DIR</code> at a folder.
+  </p>
+</aside>
+
+<script src="app.js"></script>
+</body>
+</html>
